@@ -99,6 +99,7 @@ def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
         return
     
     sh = imageio.imread(imgfiles[0]).shape
+    # 焦距等比例缩放
     poses[:2, 4, :] = np.array(sh[:2]).reshape([2, 1])
     poses[2, 4, :] = poses[2, 4, :] * 1./factor
     
@@ -115,6 +116,9 @@ def _load_data(basedir, factor=None, width=None, height=None, load_imgs=True):
     imgs = np.stack(imgs, -1)  
     
     print('Loaded image data', imgs.shape, poses[:,-1,0])
+    # poses: 3 * 5 * N [c2w matrix + H, W, f]
+    # bd： 2 * N [near, far] * N
+    # imgs: 378（H) * 504(W) * 3 * N
     return poses, bds, imgs
 
     
@@ -257,7 +261,9 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     sc = 1. if bd_factor is None else 1./(bds.min() * bd_factor)
     poses[:,:3,3] *= sc
     bds *= sc
-    
+
+    import pdb
+    pdb.set_trace()
     if recenter:
         poses = recenter_poses(poses)
         
