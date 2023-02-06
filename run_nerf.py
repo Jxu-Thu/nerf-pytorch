@@ -532,14 +532,14 @@ def config_parser():
 
 
 def train():
-    import pdb
-    pdb.set_trace()
     parser = config_parser()
     args = parser.parse_args()
 
     # Load data
     K = None
     if args.dataset_type == 'llff':
+        import pdb
+        pdb.set_trace()
         images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.factor,
                                                                   recenter=True, bd_factor=.75,
                                                                   spherify=args.spherify)
