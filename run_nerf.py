@@ -675,6 +675,8 @@ def train():
     # Prepare raybatch tensor if batching random rays
     N_rand = args.N_rand
     use_batching = not args.no_batching
+    import pdb
+    pdb.set_trace()
     if use_batching:
         # For random ray batching
         print('get rays')
