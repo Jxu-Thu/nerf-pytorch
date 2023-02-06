@@ -538,8 +538,6 @@ def train():
     # Load data
     K = None
     if args.dataset_type == 'llff':
-        import pdb
-        pdb.set_trace()
         images, poses, bds, render_poses, i_test = load_llff_data(args.datadir, args.factor,
                                                                   recenter=True, bd_factor=.75,
                                                                   spherify=args.spherify)
@@ -637,6 +635,8 @@ def train():
         with open(f, 'w') as file:
             file.write(open(args.config, 'r').read())
 
+    import pdb
+    pdb.set_trace()
     # Create nerf model
     render_kwargs_train, render_kwargs_test, start, grad_vars, optimizer = create_nerf(args)
     global_step = start
