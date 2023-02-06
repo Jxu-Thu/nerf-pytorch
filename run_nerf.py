@@ -532,7 +532,8 @@ def config_parser():
 
 
 def train():
-
+    import pdb
+    pdb.set_trace()
     parser = config_parser()
     args = parser.parse_args()
 
