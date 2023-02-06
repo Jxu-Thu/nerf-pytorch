@@ -262,11 +262,10 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
     poses[:,:3,3] *= sc
     bds *= sc
 
-    import pdb
-    pdb.set_trace()
     if recenter:
         poses = recenter_poses(poses)
-        
+
+    # 生成一个相机轨迹用于新视角的合成
     if spherify:
         poses, render_poses, bds = spherify_poses(poses, bds)
 
@@ -305,7 +304,8 @@ def load_llff_data(basedir, factor=8, recenter=True, bd_factor=.75, spherify=Fal
         # Generate poses for spiral path
         render_poses = render_path_spiral(c2w_path, up, rads, focal, zdelta, zrate=.5, rots=N_rots, N=N_views)
         
-        
+    import pdb
+    pdb.set_trace()
     render_poses = np.array(render_poses).astype(np.float32)
 
     c2w = poses_avg(poses)
