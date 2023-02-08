@@ -276,6 +276,8 @@ def raw2outputs(raw, z_vals, rays_d, raw_noise_std=0, white_bkgd=False, pytest=F
         weights: [num_rays, num_samples]. Weights assigned to each sampled color.
         depth_map: [num_rays]. Estimated distance to object.
     """
+    # z_vals: 0-1的分位数
+    # rays_d: ndc坐标下的方向
     raw2alpha = lambda raw, dists, act_fn=F.relu: 1.-torch.exp(-act_fn(raw)*dists)
     import pdb
     pdb.set_trace()
@@ -390,8 +392,6 @@ def render_rays(ray_batch,
     # pts [1024, 64, 3] where 64 represents 64 sampling points
     # viewdirs [1024, 3]
     raw = network_query_fn(pts, viewdirs, network_fn)
-    import pdb
-    pdb.set_trace()
     rgb_map, disp_map, acc_map, weights, depth_map = raw2outputs(raw, z_vals, rays_d, raw_noise_std, white_bkgd, pytest=pytest)
 
     if N_importance > 0:
