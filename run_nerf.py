@@ -39,13 +39,14 @@ def run_network(inputs, viewdirs, fn, embed_fn, embeddirs_fn, netchunk=1024*64):
     """
     inputs_flat = torch.reshape(inputs, [-1, inputs.shape[-1]])
     embedded = embed_fn(inputs_flat)
-    import pdb
-    pdb.set_trace()
+    #（1024 * 64， 63）
     if viewdirs is not None:
         input_dirs = viewdirs[:,None].expand(inputs.shape)
         input_dirs_flat = torch.reshape(input_dirs, [-1, input_dirs.shape[-1]])
         embedded_dirs = embeddirs_fn(input_dirs_flat)
+        # (1024 * 64, 27)
         embedded = torch.cat([embedded, embedded_dirs], -1)
+        # (1024 * 64, 90)
 
     outputs_flat = batchify(fn, netchunk)(embedded)
     outputs = torch.reshape(outputs_flat, list(inputs.shape[:-1]) + [outputs_flat.shape[-1]])
@@ -99,9 +100,10 @@ def render(H, W, K, chunk=1024*32, rays=None, c2w=None, ndc=True,
     else:
         # use provided ray batch
         rays_o, rays_d = rays
-
+    import pdb
+    pdb.set_trace()
     if use_viewdirs:
-        # provide ray directions as input
+        # provide ray directions as input [as mentioned in ]
         viewdirs = rays_d
         if c2w_staticcam is not None:
             # special case to visualize effect of viewdirs
@@ -114,8 +116,6 @@ def render(H, W, K, chunk=1024*32, rays=None, c2w=None, ndc=True,
         # for forward facing scenes
         rays_o, rays_d = ndc_rays(H, W, K[0][0], 1., rays_o, rays_d)
 
-    import pdb
-    pdb.set_trace()
     # Create ray batch
     rays_o = torch.reshape(rays_o, [-1,3]).float()
     rays_d = torch.reshape(rays_d, [-1,3]).float()
@@ -385,8 +385,6 @@ def render_rays(ray_batch,
 
 
 #     raw = run_network(pts)
-    import pdb
-    pdb.set_trace()
     raw = network_query_fn(pts, viewdirs, network_fn)
     rgb_map, disp_map, acc_map, weights, depth_map = raw2outputs(raw, z_vals, rays_d, raw_noise_std, white_bkgd, pytest=pytest)
 
@@ -640,8 +638,6 @@ def train():
         with open(f, 'w') as file:
             file.write(open(args.config, 'r').read())
 
-    import pdb
-    pdb.set_trace()
     # Create nerf model
     render_kwargs_train, render_kwargs_test, start, grad_vars, optimizer = create_nerf(args)
     global_step = start
