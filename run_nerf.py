@@ -49,9 +49,8 @@ def run_network(inputs, viewdirs, fn, embed_fn, embeddirs_fn, netchunk=1024*64):
         # (1024 * 64, 90)
 
     outputs_flat = batchify(fn, netchunk)(embedded)
-    import pdb
-    pdb.set_trace()
     outputs = torch.reshape(outputs_flat, list(inputs.shape[:-1]) + [outputs_flat.shape[-1]])
+    # outputs: [1024, 64, 4] (RGB + sigma)
     return outputs
 
 
@@ -387,9 +386,11 @@ def render_rays(ray_batch,
 
 
 #     raw = run_network(pts)
+    # pts [1024, 64, 3] where 64 represents 64 sampling points
+    # viewdirs [1024, 3]
+    raw = network_query_fn(pts, viewdirs, network_fn)
     import pdb
     pdb.set_trace()
-    raw = network_query_fn(pts, viewdirs, network_fn)
     rgb_map, disp_map, acc_map, weights, depth_map = raw2outputs(raw, z_vals, rays_d, raw_noise_std, white_bkgd, pytest=pytest)
 
     if N_importance > 0:
