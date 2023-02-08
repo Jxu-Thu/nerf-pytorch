@@ -49,6 +49,8 @@ def run_network(inputs, viewdirs, fn, embed_fn, embeddirs_fn, netchunk=1024*64):
         # (1024 * 64, 90)
 
     outputs_flat = batchify(fn, netchunk)(embedded)
+    import pdb
+    pdb.set_trace()
     outputs = torch.reshape(outputs_flat, list(inputs.shape[:-1]) + [outputs_flat.shape[-1]])
     return outputs
 
@@ -100,8 +102,7 @@ def render(H, W, K, chunk=1024*32, rays=None, c2w=None, ndc=True,
     else:
         # use provided ray batch
         rays_o, rays_d = rays
-    import pdb
-    pdb.set_trace()
+
     if use_viewdirs:
         # provide ray directions as input [as mentioned in ]
         viewdirs = rays_d
@@ -123,6 +124,7 @@ def render(H, W, K, chunk=1024*32, rays=None, c2w=None, ndc=True,
     near, far = near * torch.ones_like(rays_d[...,:1]), far * torch.ones_like(rays_d[...,:1])
     rays = torch.cat([rays_o, rays_d, near, far], -1)
     if use_viewdirs:
+        # [这有点奇怪, rays position坐标用了ndc坐标，但是viewdirs用了world坐标]
         rays = torch.cat([rays, viewdirs], -1)
 
     # Render and reshape
@@ -385,6 +387,8 @@ def render_rays(ray_batch,
 
 
 #     raw = run_network(pts)
+    import pdb
+    pdb.set_trace()
     raw = network_query_fn(pts, viewdirs, network_fn)
     rgb_map, disp_map, acc_map, weights, depth_map = raw2outputs(raw, z_vals, rays_d, raw_noise_std, white_bkgd, pytest=pytest)
 
