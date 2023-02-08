@@ -56,8 +56,6 @@ def batchify_rays(rays_flat, chunk=1024*32, **kwargs):
     """
     all_ret = {}
     for i in range(0, rays_flat.shape[0], chunk):
-        import pdb
-        pdb.set_trace()
         ret = render_rays(rays_flat[i:i+chunk], **kwargs)
         for k in ret:
             if k not in all_ret:
