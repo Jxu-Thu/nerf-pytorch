@@ -56,6 +56,8 @@ def batchify_rays(rays_flat, chunk=1024*32, **kwargs):
     """
     all_ret = {}
     for i in range(0, rays_flat.shape[0], chunk):
+        import pdb
+        pdb.set_trace()
         ret = render_rays(rays_flat[i:i+chunk], **kwargs)
         for k in ret:
             if k not in all_ret:
@@ -384,6 +386,8 @@ def render_rays(ray_batch,
 
 
 #     raw = run_network(pts)
+    import pdb
+    pdb.set_trace()
     raw = network_query_fn(pts, viewdirs, network_fn)
     rgb_map, disp_map, acc_map, weights, depth_map = raw2outputs(raw, z_vals, rays_d, raw_noise_std, white_bkgd, pytest=pytest)
 
