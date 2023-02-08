@@ -92,8 +92,6 @@ def render(H, W, K, chunk=1024*32, rays=None, c2w=None, ndc=True,
       acc_map: [batch_size]. Accumulated opacity (alpha) along a ray.
       extras: dict with everything returned by render_rays().
     """
-    import pdb
-    pdb.set_trace()
     if c2w is not None:
         # special case to render full image
         rays_o, rays_d = get_rays(H, W, K, c2w)
@@ -115,6 +113,8 @@ def render(H, W, K, chunk=1024*32, rays=None, c2w=None, ndc=True,
         # for forward facing scenes
         rays_o, rays_d = ndc_rays(H, W, K[0][0], 1., rays_o, rays_d)
 
+    import pdb
+    pdb.set_trace()
     # Create ray batch
     rays_o = torch.reshape(rays_o, [-1,3]).float()
     rays_d = torch.reshape(rays_d, [-1,3]).float()
